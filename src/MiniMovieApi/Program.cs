@@ -2,6 +2,16 @@ using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.AllowAnyOrigin() // Allow requests from any origin
+               .AllowAnyHeader() // Allow any headers
+               .AllowAnyMethod(); // Allow any HTTP methods (GET, POST, PUT, DELETE, etc.)
+    });
+});
 builder.Services.AddDbContext<MovieDbContext>();
 var app = builder.Build();
 
@@ -44,6 +54,8 @@ app.MapDelete("/movies/{id}", async (MovieDbContext db, int id) =>
 
 });
 
+// Add CORS services
+app.UseCors();
 app.Run();
 
 public class MovieDbContext : DbContext
